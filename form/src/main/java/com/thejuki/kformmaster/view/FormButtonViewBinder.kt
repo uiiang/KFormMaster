@@ -25,7 +25,7 @@ class FormButtonViewBinder(private val context: Context, private val formBuilder
         val itemView = finder.getRootView() as View
         baseSetup(model, null, null, itemView)
 
-        val button = finder.find(R.id.formElementValue) as Button
+        val button = finder.find(model.editLayoutId ?: R.id.formElementValue) as Button
         button.text = model.valueAsString
 
         model.editView = button

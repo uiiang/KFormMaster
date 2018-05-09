@@ -2,6 +2,7 @@ package com.thejuki.kformmaster.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.support.annotation.IdRes
 import android.support.v7.widget.AppCompatCheckBox
 import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.AppCompatTextView
@@ -134,6 +135,24 @@ open class BaseFormElement<T : Serializable>(var tag: Int = -1) : ViewModel, Par
     var errorView: AppCompatTextView? = null
 
     /**
+     * Form Element Edit Layout
+     */
+    @IdRes
+    var editLayoutId: Int? = null
+
+    /**
+     * Form Element Title Layout
+     */
+    @IdRes
+    var titleLayoutId: Int? = null
+
+    /**
+     * Form Element Error Layout
+     */
+    @IdRes
+    var errorLayoutId: Int? = null
+
+    /**
      * Form Element Visibility
      */
     var visible: Boolean = true
@@ -249,6 +268,30 @@ open class BaseFormElement<T : Serializable>(var tag: Int = -1) : ViewModel, Par
      */
     fun addValueObserver(observer: (T?, BaseFormElement<T>) -> Unit): BaseFormElement<T> {
         this.valueObservers.add(observer)
+        return this
+    }
+
+    /**
+     * titleLayoutId builder setter
+     */
+    fun setTitleLayoutId(@IdRes titleLayoutId: Int?): BaseFormElement<T> {
+        this.titleLayoutId = titleLayoutId
+        return this
+    }
+
+    /**
+     * errorLayoutId builder setter
+     */
+    fun setErrorLayoutId(@IdRes errorLayoutId: Int?): BaseFormElement<T> {
+        this.errorLayoutId = errorLayoutId
+        return this
+    }
+
+    /**
+     * editLayoutId builder setter
+     */
+    fun setEditLayoutId(@IdRes editLayoutId: Int?): BaseFormElement<T> {
+        this.editLayoutId = editLayoutId
         return this
     }
 

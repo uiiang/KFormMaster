@@ -23,12 +23,14 @@ import com.thejuki.kformmaster.state.FormSwitchViewState
  */
 class FormSwitchViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
     var viewBinder = ViewBinder(R.layout.form_element_switch, FormSwitchElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
+        val textViewTitle = finder.find(model.titleLayoutId
+                ?: R.id.formElementTitle) as AppCompatTextView
+        val textViewError = finder.find(model.errorLayoutId
+                ?: R.id.formElementError) as AppCompatTextView
         val itemView = finder.getRootView() as View
         baseSetup(model, textViewTitle, textViewError, itemView)
 
-        val switch = finder.find(R.id.formElementValue) as SwitchCompat
+        val switch = finder.find(model.editLayoutId ?: R.id.formElementValue) as SwitchCompat
         switch.isChecked = model.isOn()
 
         model.editView = switch

@@ -1,6 +1,7 @@
 package com.thejuki.kformmaster.helper
 
 import android.content.Context
+import android.support.annotation.IdRes
 import android.support.v7.widget.RecyclerView
 import android.widget.ArrayAdapter
 import com.thejuki.kformmaster.listener.OnFormElementValueChangedListener
@@ -99,6 +100,24 @@ abstract class BaseElementBuilder<T : Serializable>(protected val tag: Int = -1,
     var visible: Boolean = true
 
     /**
+     * Form Element Edit Layout
+     */
+    @IdRes
+    var editLayoutId: Int? = null
+
+    /**
+     * Form Element Title Layout
+     */
+    @IdRes
+    var titleLayoutId: Int? = null
+
+    /**
+     * Form Element Error Layout
+     */
+    @IdRes
+    var errorLayoutId: Int? = null
+
+    /**
      * Form Element Value Observers
      */
     val valueObservers = mutableListOf<(value: T?, element: BaseFormElement<T>) -> Unit>()
@@ -114,6 +133,9 @@ class SingleLineEditTextBuilder(tag: Int = -1) : BaseElementBuilder<String>(tag)
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormSingleLineEditTextElement
 }
@@ -136,6 +158,9 @@ class MultiLineEditTextBuilder(tag: Int = -1) : BaseElementBuilder<String>(tag) 
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormMultiLineEditTextElement
 }
@@ -159,6 +184,9 @@ class NumberEditTextBuilder(tag: Int = -1) : BaseElementBuilder<String>(tag) {
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormNumberEditTextElement)
                     .setNumbersOnly(numbersOnly)
@@ -182,6 +210,9 @@ class EmailEditTextBuilder(tag: Int = -1) : BaseElementBuilder<String>(tag) {
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormEmailEditTextElement
 }
@@ -204,6 +235,9 @@ class PasswordEditTextBuilder(tag: Int = -1) : BaseElementBuilder<String>(tag) {
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormPasswordEditTextElement
 }
@@ -226,6 +260,9 @@ class PhoneEditTextBuilder(tag: Int = -1) : BaseElementBuilder<String>(tag) {
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormPhoneEditTextElement
 }
@@ -250,6 +287,9 @@ class AutoCompleteBuilder<T : Serializable>(tag: Int = -1) : BaseElementBuilder<
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormAutoCompleteElement<T>)
                     .setArrayAdapter(arrayAdapter)
@@ -276,6 +316,9 @@ class AutoCompleteTokenBuilder<T : Serializable>(tag: Int = -1) : BaseElementBui
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormTokenAutoCompleteElement<T>)
                     .setArrayAdapter(arrayAdapter)
@@ -295,10 +338,13 @@ class ButtonBuilder(val tag: Int = -1) : FieldBuilder {
     var value: String? = null
     var visible: Boolean = true
     val valueObservers = mutableListOf<(value: String?, element: BaseFormElement<String>) -> Unit>()
+    @IdRes
+    var editLayoutId: Int? = null
     override fun build() =
             (FormButtonElement(tag)
                     .setValue(value)
                     .setVisible(visible)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormButtonElement)
 }
@@ -323,6 +369,9 @@ class DateBuilder(tag: Int = -1) : BaseElementBuilder<FormPickerDateElement.Date
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormPickerDateElement)
 }
@@ -347,6 +396,9 @@ class TimeBuilder(tag: Int = -1) : BaseElementBuilder<FormPickerTimeElement.Time
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormPickerTimeElement)
 }
@@ -371,6 +423,9 @@ class DateTimeBuilder(tag: Int = -1) : BaseElementBuilder<FormPickerDateTimeElem
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormPickerDateTimeElement)
 }
@@ -396,6 +451,9 @@ class DropDownBuilder<T : Serializable>(tag: Int = -1) : BaseElementBuilder<T>(t
                     .setRequired(required)
                     .setVisible(visible)
                     .setOptions(options?: ArrayList())
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormPickerDropDownElement<T>)
                     .setDialogTitle(dialogTitle)
@@ -423,6 +481,9 @@ class MultiCheckBoxBuilder<T : Serializable>(tag: Int = -1) : BaseElementBuilder
                     .setVisible(visible)
                     .setOptions(options?: ArrayList())
                     .setOptionsSelected(optionsSelected?: ArrayList())
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormPickerMultiCheckBoxElement<T>)
                     .setDialogTitle(dialogTitle)
@@ -448,6 +509,9 @@ class SwitchBuilder<T : Serializable>(tag: Int = -1) : BaseElementBuilder<T>(tag
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormSwitchElement<T>)
                     .setOnValue(onValue)
@@ -474,6 +538,9 @@ class CheckBoxBuilder<T : Serializable>(tag: Int = -1) : BaseElementBuilder<T>(t
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormCheckBoxElement<T>)
                     .setCheckedValue(checkedValue)
@@ -490,9 +557,28 @@ fun <T : Serializable> FormBuildHelper.checkBox(tag: Int = -1, init: CheckBoxBui
 
 /** Builder method to add a FormSliderElement */
 class SliderBuilder(tag: Int = -1) : BaseElementBuilder<Int>(tag) {
+    /**
+     * Maximum progress of the slider
+     */
     var max: Int = 100
+
+    /**
+     * Minimum progress of the slider
+     */
     var min: Int = 0
+
+    /**
+     * Steps of the slider
+     * Ex. 20 steps with max of 100 would step 0, 5, 10, 15, 20, 25,... to 100
+     */
     var steps: Int = 1
+
+    /**
+     * Form Element Progress Number Layout
+     */
+    @IdRes
+    var progressLayoutId: Int? = null
+
     override fun build() =
             (FormSliderElement(tag)
                     .setTitle(title.orEmpty())
@@ -501,11 +587,15 @@ class SliderBuilder(tag: Int = -1) : BaseElementBuilder<Int>(tag) {
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormSliderElement)
                     .setMax(max)
                     .setMin(min)
                     .setSteps(steps)
+                    .setProgressLayoutId(progressLayoutId)
 }
 
 /** FormBuildHelper extension to add a FormSliderElement */
@@ -520,12 +610,21 @@ class TextViewBuilder(val tag: Int = -1) : FieldBuilder {
     var title: String? = null
     var value: String? = null
     var visible: Boolean = true
+    @IdRes
+    var editLayoutId: Int? = null
+    @IdRes
+    var titleLayoutId: Int? = null
+    @IdRes
+    var errorLayoutId: Int? = null
     val valueObservers = mutableListOf<(value: String?, element: BaseFormElement<String>) -> Unit>()
     override fun build() =
             (FormTextViewElement(tag)
                     .setTitle(title.orEmpty())
                     .setValue(value)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormTextViewElement)
 }

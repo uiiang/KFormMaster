@@ -71,6 +71,9 @@ class CustomFormActivity : AppCompatActivity() {
             header { title = getString(R.string.custom_form) }
             customEx(Tag.Custom.ordinal) {
                 title = getString(R.string.Custom)
+                titleLayoutId = R.id.customFormElementTitle
+                errorLayoutId = R.id.customFormElementError
+                editLayoutId = R.id.customFormElementValue
             }
             header { title = getString(R.string.custom_footer) }
         }

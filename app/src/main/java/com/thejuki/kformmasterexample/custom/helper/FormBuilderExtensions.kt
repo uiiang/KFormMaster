@@ -23,6 +23,9 @@ class CustomElementBuilder(tag: Int = -1) : BaseElementBuilder<String>(tag) {
                     .setError(error)
                     .setRequired(required)
                     .setVisible(visible)
+                    .setTitleLayoutId(titleLayoutId)
+                    .setErrorLayoutId(errorLayoutId)
+                    .setEditLayoutId(editLayoutId)
                     .addAllValueObservers(valueObservers)
                     as FormCustomElement
 }

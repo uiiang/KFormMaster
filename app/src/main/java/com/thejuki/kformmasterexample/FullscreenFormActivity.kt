@@ -236,6 +236,7 @@ class FullscreenFormActivity : AppCompatActivity() {
                 options = fruits
                 optionsSelected = listOf(ListItem(id = 1, name = "Banana"))
                 required = true
+                // editLayoutId = R.id.customFormElementValue
                 valueObservers.add({ newValue, element ->
                     Toast.makeText(this@FullscreenFormActivity, newValue.toString(), LENGTH_SHORT).show()
                 })

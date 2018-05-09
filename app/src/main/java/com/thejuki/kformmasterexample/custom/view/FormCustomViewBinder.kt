@@ -28,12 +28,15 @@ import com.thejuki.kformmasterexample.custom.state.FormCustomViewState
  */
 class CustomViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
     var viewBinder = ViewBinder(R.layout.form_element_custom, FormCustomElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
+        val textViewTitle = finder.find(model.titleLayoutId
+                ?: R.id.customFormElementTitle) as AppCompatTextView
+        val textViewError = finder.find(model.errorLayoutId
+                ?: R.id.customFormElementError) as AppCompatTextView
         val itemView = finder.getRootView() as View
         baseSetup(model, textViewTitle, textViewError, itemView)
 
-        val editTextValue = finder.find(R.id.formElementValue) as AppCompatEditText
+        val editTextValue = finder.find(model.editLayoutId
+                ?: R.id.customFormElementValue) as AppCompatEditText
 
         editTextValue.setText(model.valueAsString)
         editTextValue.hint = model.hint ?: ""
@@ -49,10 +52,6 @@ class CustomViewBinder(private val context: Context, private val formBuilder: Fo
                         R.color.colorFormMasterElementTextTitle))
             }
         }
-
-        // Multi Line
-        editTextValue.setSingleLine(false)
-        editTextValue.maxLines = 4
 
         editTextValue.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence, i: Int, i2: Int, i3: Int) {}
