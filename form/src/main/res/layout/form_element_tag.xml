@@ -62,24 +62,41 @@
         <RelativeLayout
             android:id="@+id/value_layout"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="end"
-            android:orientation="horizontal"
-            android:paddingEnd="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingStart="16dp">
+            android:layout_height="wrap_content"
+            android:layout_weight="3">
 
             <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/formElementProgress"
-                android:layout_width="0dp"
+                android:id="@+id/value_prefix"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:gravity="center_vertical"
                 android:textColor="@drawable/edit_text_selector"
-                android:textSize="@dimen/elementTextTitleSize"
-                tools:text="50.0" />
+                android:textSize="@dimen/elementTextValueSize"
+                android:visibility="gone" />
+
+
+            <com.zhy.view.flowlayout.TagFlowLayout
+                android:id="@+id/tag_flow_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="13dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="14dp" />
+
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/value_suffix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:textColor="@drawable/edit_text_selector"
+                android:textSize="@dimen/elementTextValueSize"
+                android:visibility="gone"
+                tools:text="后缀" />
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/value_suffix_img"
@@ -91,15 +108,8 @@
                 android:visibility="gone" />
 
         </RelativeLayout>
-    </LinearLayout>
 
-    <android.support.v7.widget.AppCompatSeekBar
-        android:id="@+id/formElementValue"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:max="100"
-        android:progress="0" />
+    </LinearLayout>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/formElementError"

@@ -130,7 +130,7 @@ class FormListenerActivity : AppCompatActivity(), OnFormElementValueChangedListe
             }
             dateTime(DateTime.ordinal) {
                 title = getString(R.string.DateTime)
-                dateValue = Date()
+                dateValue = Calendar.getInstance()
                 dateFormat = SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US)
             }
             header { title = getString(R.string.PreferredItems) }

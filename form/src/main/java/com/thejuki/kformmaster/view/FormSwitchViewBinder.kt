@@ -23,10 +23,10 @@ import com.thejuki.kformmaster.state.FormSwitchViewState
  */
 class FormSwitchViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
     var viewBinder = ViewBinder(R.layout.form_element_switch, FormSwitchElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
-        val itemView = finder.getRootView() as View
-        baseSetup(model, textViewTitle, textViewError, itemView)
+        buildLayout(model, finder, context, formBuilder)
+        val (textViewTitle, textViewError, itemView) = buildTitle(model, finder, context, formBuilder)
+        buildValueWrap(model, finder, formBuilder)
+
 
         val switch = finder.find(R.id.formElementValue) as SwitchCompat
         switch.isChecked = model.isOn()
@@ -44,6 +44,10 @@ class FormSwitchViewBinder(private val context: Context, private val formBuilder
             formBuilder.onValueChanged(model)
             model.error = null
         }
+
+//        model.titlesColor?.let {
+//            textViewTitle.setTextColor(ContextCompat.getColor(context, it))
+//        }
     }, object : ViewStateProvider<FormSwitchElement<*>, ViewHolder> {
         override fun createViewStateID(model: FormSwitchElement<*>): Int {
             return model.id

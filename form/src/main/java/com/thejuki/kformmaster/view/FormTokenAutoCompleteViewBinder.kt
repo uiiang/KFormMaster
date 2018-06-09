@@ -15,6 +15,10 @@ import com.thejuki.kformmaster.helper.FormBuildHelper
 import com.thejuki.kformmaster.model.FormTokenAutoCompleteElement
 import com.thejuki.kformmaster.state.FormTokenAutoCompleteViewState
 import com.thejuki.kformmaster.token.ItemsCompletionView
+import com.thejuki.kformmaster.utils.setHintTextColorExt
+import com.thejuki.kformmaster.utils.setTextBoldExt
+import com.thejuki.kformmaster.utils.setTextColorExt
+import com.thejuki.kformmaster.utils.setTextSizeExt
 import com.tokenautocomplete.TokenCompleteTextView
 
 /**
@@ -27,10 +31,10 @@ import com.tokenautocomplete.TokenCompleteTextView
  */
 class FormTokenAutoCompleteViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
     var viewBinder = ViewBinder(R.layout.form_element_token_auto_complete, FormTokenAutoCompleteElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
-        val itemView = finder.getRootView() as View
-        baseSetup(model, textViewTitle, textViewError, itemView)
+        buildLayout(model, finder, context, formBuilder)
+        val (textViewTitle, textViewError, itemView) = buildTitle(model, finder, context, formBuilder)
+        buildValueWrap(model, finder, formBuilder)
+
 
         val itemsCompletionView = finder.find(R.id.formElementValue) as ItemsCompletionView
 
@@ -41,6 +45,10 @@ class FormTokenAutoCompleteViewBinder(private val context: Context, private val 
         }
 
         itemsCompletionView.hint = model.hint ?: ""
+        val hintColor = getParamTypeInt(model.hintColor, formBuilder.commonHintColor)
+        if (hintColor > -1) {
+            itemsCompletionView.setHintTextColorExt(hintColor)
+        }
 
         model.editView = itemsCompletionView
 
@@ -61,13 +69,23 @@ class FormTokenAutoCompleteViewBinder(private val context: Context, private val 
 
         setEditTextFocusEnabled(itemsCompletionView, itemView)
 
+        itemsCompletionView.apply {
+            val size = getParamTypeInt(model.valueTextSize, formBuilder.commonValueTextSize)
+            if (size > -1) {
+                setTextSizeExt(size)
+            }
+            setTextBoldExt(getParamTypeBoolean(model.valueBold, formBuilder.commonValueBold))
+            val color = getParamTypeInt(model.valueColor, formBuilder.commonValueColor)
+            if (color > -1) {
+                setTextColorExt(color)
+            }
+        }
+
         itemsCompletionView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                textViewTitle.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorFormMasterElementFocusedTitle))
+                itemsCompletionView.setTextColorExt(model.titleFocusColor)
             } else {
-                textViewTitle.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorFormMasterElementTextTitle))
+                itemsCompletionView.setTextColorExt(model.titlesColor)
 
                 model.setValue(itemsCompletionView.objects)
                 model.error = null

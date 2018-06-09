@@ -1,5 +1,7 @@
 package com.thejuki.kformmasterexample.item
 
+import com.thejuki.kformmaster.helper.BaseTag
+
 /**
  * List Item
  *
@@ -10,7 +12,14 @@ package com.thejuki.kformmasterexample.item
  */
 data class ListItem(val id: Long? = null,
                     val name: String? = null
-) {
+) : BaseTag {
+    override fun getTagId(): Long {
+        return id!!
+    }
+
+    override fun getTagText(): String {
+        return name.orEmpty()
+    }
     override fun toString(): String {
         return name.orEmpty()
     }

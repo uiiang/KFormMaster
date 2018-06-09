@@ -8,4 +8,10 @@ package com.thejuki.kformmaster.model
  * @author **TheJuki** ([GitHub](https://github.com/TheJuki))
  * @version 1.0
  */
-class FormPasswordEditTextElement(tag: Int = -1) : BaseFormElement<String>(tag)
+class FormPasswordEditTextElement(tag: Int = -1) : BaseFormElement<String>(tag) {
+
+    var showHidePasswordBtn: Boolean = false
+    var hidePasswordBtnRes: Int? = null
+    var defaultHidePassword: Boolean = true
+
+}

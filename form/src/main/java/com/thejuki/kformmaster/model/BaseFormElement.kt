@@ -17,19 +17,83 @@ import kotlin.properties.Delegates
  * @version 1.0
  */
 open class BaseFormElement<T>(var tag: Int = -1) : ViewModel {
-
     /**
      * Form Element Title
      */
-    var title: String? = null
+    var title: CharSequence? = null
         set(value) {
             field = value
             titleView?.let {
                 it.text = value
             }
         }
+    var titlePrefixImage: Int = -1
+    var titleTextSize: Int = -1
+    var titlesColor: Int = -1
+    var titleFocusColor: Int = -1
+    var titleBold: Boolean? = null
+    //        set(value) {
+//            field = value
+//            titleView?.let {
+//                val tp = it.paint
+//                value?.let {
+//                    tp.isFakeBoldText = value
+//                }
+//            }
+//        }
+    var showColln: Boolean = true
+    var requiredShowAsterisk: Int = -1
+    var titleDrawableLeft: Int = -1
+    var titleDrawableRight: Int = -1
+    var titleDrawablePadding: Int = -1
 
-    /**
+    var valueColor: Int = -1
+    var valueBold: Boolean? = null
+    var valueTextSize: Int = -1
+    var valuePrefixText: String? = null
+    var valuePrefixTextColor: Int = -1
+    var valuePrefixTextBold: Boolean? = null
+    var valuePrefixTextSize: Int = -1
+    var valueSuffixText: String? = null
+    var valueSuffixTextColor: Int = -1
+    var valueSuffixTextBold: Boolean? = null
+    var valueSuffixTextSize: Int = -1
+    var showTitleLayout: Int = View.VISIBLE
+    var showValueLayout: Int = View.VISIBLE
+    var valueSuffixImage: Int = -1
+    var valueOnClickListener: View.OnClickListener? = null
+
+    var valueMaxLength: Int = -1
+
+    var showTopDivider: Boolean = true
+    var showBottomDivider = false
+
+    var paddingLeft: Int = -1
+    var paddingTop: Int = -1
+    var paddingRight: Int = -1
+    var paddingBottom: Int = -1
+    var layoutMarginLeft: Int = -1
+    var layoutMarginTop: Int = -1
+    var layoutMarginRight: Int = -1
+    var layoutMarginBottom: Int = -1
+    var selectAllOnFocus = false
+        set(value) {
+            field = value
+            editView?.let {
+                if (it is AppCompatEditText) {
+                    it.setSelectAllOnFocus(value)
+                }
+            }
+        }
+
+
+    var dividerPaddingLeft: Int = 0
+    var dividerPaddingRight: Int = 0
+    var dividerHeight: Int = 1
+    var dividerColor: Int = -1
+    var layoutBackground: Int = -1
+
+    /*
      * Form Element Unique ID
      */
     var id: Int = 0
@@ -56,6 +120,17 @@ open class BaseFormElement<T>(var tag: Int = -1) : ViewModel {
         }
     }
 
+    var hintColor: Int = -1
+//        set(value) {
+//            field = value
+//            value?.let {
+//                editView?.let {
+//                    if (it is TextView) {
+//                        it.setHintTextColor(value)
+//                    }
+//                }
+//            }
+//        }
     /**
      * Form Element Hint
      */
@@ -86,7 +161,7 @@ open class BaseFormElement<T>(var tag: Int = -1) : ViewModel {
     /**
      * Form Element RTL
      */
-    var rightToLeft: Boolean = true
+    var rightToLeft: Boolean = false
         set(value) {
             field = value
             editView?.let {
@@ -128,7 +203,10 @@ open class BaseFormElement<T>(var tag: Int = -1) : ViewModel {
         set(value) {
             field = value
             itemView?.let {
-                it.isEnabled = enabled
+                //                it.isEnabled = enabled
+                if (!enabled) {
+                    it.focusable = View.NOT_FOCUSABLE
+                }
             }
         }
 
@@ -139,7 +217,11 @@ open class BaseFormElement<T>(var tag: Int = -1) : ViewModel {
         set(value) {
             field = value
             editView?.let {
-                it.isEnabled = enabled
+                //                it.isEnabled = enabled
+
+                if (!enabled) {
+                    it.focusable = View.NOT_FOCUSABLE
+                }
                 if (it is TextView && it !is AppCompatCheckBox && it !is AppCompatButton && it !is SwitchCompat) {
                     it.gravity = if (rightToLeft) Gravity.END else Gravity.START
                     it.setSingleLine(maxLines == 1)
@@ -203,7 +285,10 @@ open class BaseFormElement<T>(var tag: Int = -1) : ViewModel {
                 it.isEnabled = value
             }
             editView?.let {
-                it.isEnabled = value
+                //                                it.isEnabled = value
+                if (!value) {
+                    it.focusable = View.NOT_FOCUSABLE
+                }
             }
         }
 
@@ -322,22 +407,5 @@ open class BaseFormElement<T>(var tag: Int = -1) : ViewModel {
     fun addAllValueObservers(observers: List<(T?, BaseFormElement<T>) -> Unit>): BaseFormElement<T> {
         this.valueObservers.addAll(observers)
         return this
-    }
-
-    override fun hashCode(): Int {
-        return id
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is BaseFormElement<*>) return false
-
-        if (id != other.id) return false
-
-        return true
-    }
-
-    override fun toString(): String {
-        return "FormElement(tag=$tag, title=$title, id=$id, value=$value, hint=$hint, error=$error, required=$required, isValid=$isValid, visible=$visible)"
     }
 }

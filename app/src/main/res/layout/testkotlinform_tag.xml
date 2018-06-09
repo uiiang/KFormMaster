@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="32dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginRight="10dp"
+    android:background="@drawable/kotlinform_tag_background"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:maxEms="8"
+    android:maxLines="1"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:text="挖掘机"
+    android:textColor="@drawable/kotlinform_tag_textcolor"
+    android:textSize="13sp" />

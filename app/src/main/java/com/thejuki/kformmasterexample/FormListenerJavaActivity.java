@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -190,7 +191,7 @@ public class FormListenerJavaActivity extends AppCompatActivity implements OnFor
 
         DateTimeBuilder dateTime = new DateTimeBuilder(Tag.DateTime.ordinal());
         dateTime.setTitle(getString(R.string.DateTime));
-        dateTime.setDateValue(new Date());
+        dateTime.setDateValue(Calendar.getInstance());
         dateTime.setDateFormat(new SimpleDateFormat("MM/dd/yyyy hh:mm a", Locale.US));
         elements.add(dateTime.build());
     }

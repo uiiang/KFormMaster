@@ -1,5 +1,7 @@
 package com.thejuki.kformmaster.model
 
+import android.view.View
+
 /**
  * Form Header
  *
@@ -9,6 +11,24 @@ package com.thejuki.kformmaster.model
  * @version 1.0
  */
 class FormHeader(tag: Int = -1) : BaseFormElement<String>(tag) {
+
+    var centerTitle: String = ""
+    var centerTitleTextSize: Int = -1
+    var centerTitlesColor: Int = -1
+    var centerTitleBold: Boolean? = null
+    var showCenterTitleLayout: Int = View.GONE
+    var centerTitleDrawableLeft: Int = -1
+    var centerTitleDrawableRight: Int = -1
+    var centerTitleDrawablePadding: Int = -1
+
+    var rightTitle: String = ""
+    var rightTitleTextSize: Int = -1
+    var rightTitlesColor: Int = -1
+    var rightTitleBold: Boolean? = null
+    var showRightTitleLayout: Int = View.GONE
+    var rightTitleDrawableLeft: Int = -1
+    var rightTitleDrawableRight: Int = -1
+    var rightTitleDrawablePadding: Int = -1
 
     /**
      * Enable to collapse/un-collapse elements below the header

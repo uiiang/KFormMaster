@@ -25,10 +25,10 @@ import kotlin.math.roundToInt
  */
 class FormSliderViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
     var viewBinder = ViewBinder(R.layout.form_element_slider, FormSliderElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
-        val itemView = finder.getRootView() as View
-        baseSetup(model, textViewTitle, textViewError, itemView)
+        buildLayout(model, finder, context, formBuilder)
+        val (textViewTitle, textViewError, itemView) = buildTitle(model, finder, context, formBuilder)
+        buildValueWrap(model, finder, formBuilder)
+
 
         val slider = finder.find(R.id.formElementValue) as AppCompatSeekBar
         val progressValue = finder.find(R.id.formElementProgress) as AppCompatTextView

@@ -16,6 +16,28 @@ import java.util.*
  */
 class FormPickerDateTimeElement(tag: Int = -1) : FormPickerElement<FormPickerDateTimeElement.DateTimeHolder>(tag) {
 
+    var dateFormat: DateFormat = SimpleDateFormat.getDateInstance()
+    var dateValue: Calendar? = null
+    var hasYear: Boolean = true
+    var hasMonth: Boolean = true
+    var hasDay: Boolean = true
+    var hasHours: Boolean = true
+    var hasMins: Boolean = true
+    var hasSeconds: Boolean = true
+    var startDate: Calendar? = null
+    var endDate: Calendar? = null
+
+    fun setDateFormat(dateFormat: DateFormat): FormPickerDateTimeElement {
+        this.dateFormat = dateFormat
+        return this
+    }
+
+    fun setDateValue(dateValue: Calendar): FormPickerDateTimeElement {
+        this.dateValue = dateValue
+        return this
+    }
+
+
     override fun clear() {
         this.value?.useCurrentDate()
         (this.editView as? TextView)?.text = ""
@@ -49,15 +71,13 @@ class FormPickerDateTimeElement(tag: Int = -1) : FormPickerElement<FormPickerDat
             useCurrentDate()
         }
 
-        constructor(date: Date?, dateFormat: DateFormat = SimpleDateFormat.getDateInstance()) {
+        constructor(date: Calendar?, dateFormat: DateFormat = SimpleDateFormat.getDateInstance()) {
             if (date != null) {
-                val calendar = Calendar.getInstance()
-                calendar.time = date
-                this.year = calendar.get(Calendar.YEAR)
-                this.month = calendar.get(Calendar.MONTH) + 1
-                this.dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
-                this.hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
-                this.minute = calendar.get(Calendar.MINUTE)
+                this.year = date.get(Calendar.YEAR)
+                this.month = date.get(Calendar.MONTH) + 1
+                this.dayOfMonth = date.get(Calendar.DAY_OF_MONTH)
+                this.hourOfDay = date.get(Calendar.HOUR_OF_DAY)
+                this.minute = date.get(Calendar.MINUTE)
             } else {
                 isEmptyDateTime = true
             }

@@ -13,6 +13,10 @@ import com.thejuki.kformmaster.R
 import com.thejuki.kformmaster.helper.FormBuildHelper
 import com.thejuki.kformmaster.model.FormPickerMultiCheckBoxElement
 import com.thejuki.kformmaster.state.FormEditTextViewState
+import com.thejuki.kformmaster.utils.setHintTextColorExt
+import com.thejuki.kformmaster.utils.setTextBoldExt
+import com.thejuki.kformmaster.utils.setTextColorExt
+import com.thejuki.kformmaster.utils.setTextSizeExt
 
 /**
  * Form Picker MultiCheckBox ViewBinder
@@ -24,20 +28,34 @@ import com.thejuki.kformmaster.state.FormEditTextViewState
  */
 class FormPickerMultiCheckBoxViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
     var viewBinder = ViewBinder(R.layout.form_element, FormPickerMultiCheckBoxElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
-        val itemView = finder.getRootView() as View
-        baseSetup(model, textViewTitle, textViewError, itemView)
+        buildLayout(model, finder, context, formBuilder)
+        val (textViewTitle, textViewError, itemView) = buildTitle(model, finder, context, formBuilder)
+        buildValueWrap(model, finder, formBuilder)
 
         val editTextValue = finder.find(R.id.formElementValue) as AppCompatEditText
 
         editTextValue.setText(model.valueAsString)
         editTextValue.hint = model.hint ?: ""
+        val hintColor = getParamTypeInt(model.hintColor, formBuilder.commonHintColor)
+        if (hintColor > -1) {
+            editTextValue.setHintTextColorExt(hintColor)
+        }
 
         model.editView = editTextValue
 
         editTextValue.setRawInputType(InputType.TYPE_NULL)
         editTextValue.isFocusable = false
+        editTextValue.apply {
+            val size = getParamTypeInt(model.valueTextSize, formBuilder.commonValueTextSize)
+            if (size > -1) {
+                setTextSizeExt(size)
+            }
+            setTextBoldExt(getParamTypeBoolean(model.valueBold, formBuilder.commonValueBold))
+            val color = getParamTypeInt(model.valueColor, formBuilder.commonValueColor)
+            if (color > -1) {
+                setTextColorExt(color)
+            }
+        }
 
         model.reInitDialog(context, formBuilder)
 

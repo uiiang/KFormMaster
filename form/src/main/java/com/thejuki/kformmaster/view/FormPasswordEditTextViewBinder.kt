@@ -5,10 +5,14 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.AppCompatTextView
 import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType
 import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.ToggleButton
 import com.github.vivchar.rendererrecyclerviewadapter.ViewHolder
 import com.github.vivchar.rendererrecyclerviewadapter.ViewState
 import com.github.vivchar.rendererrecyclerviewadapter.ViewStateProvider
@@ -17,6 +21,10 @@ import com.thejuki.kformmaster.R
 import com.thejuki.kformmaster.helper.FormBuildHelper
 import com.thejuki.kformmaster.model.FormPasswordEditTextElement
 import com.thejuki.kformmaster.state.FormEditTextViewState
+import com.thejuki.kformmaster.utils.setHintTextColorExt
+import com.thejuki.kformmaster.utils.setTextBoldExt
+import com.thejuki.kformmaster.utils.setTextColorExt
+import com.thejuki.kformmaster.utils.setTextSizeExt
 
 /**
  * Form Password EditText ViewBinder
@@ -27,31 +35,38 @@ import com.thejuki.kformmaster.state.FormEditTextViewState
  * @version 1.0
  */
 class FormPasswordEditTextViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
-    var viewBinder = ViewBinder(R.layout.form_element, FormPasswordEditTextElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
-        val itemView = finder.getRootView() as View
-        baseSetup(model, textViewTitle, textViewError, itemView)
+    var viewBinder = ViewBinder(R.layout.form_element_password, FormPasswordEditTextElement::class.java, { model, finder, _ ->
+        buildLayout(model, finder, context, formBuilder)
+        val (textViewTitle, textViewError, itemView) = buildTitle(model, finder, context, formBuilder)
+        buildValueWrap(model, finder, formBuilder)
 
         val editTextValue = finder.find(R.id.formElementValue) as AppCompatEditText
-
+        model.valueOnClickListener?.let {
+            editTextValue.setOnClickListener(it)
+        }
         editTextValue.setText(model.valueAsString)
         editTextValue.hint = model.hint ?: ""
-
+        val hintColor = getParamTypeInt(model.hintColor, formBuilder.commonHintColor)
+        if (hintColor > -1) {
+            editTextValue.setHintTextColorExt(hintColor)
+        }
+        editTextValue.setSelectAllOnFocus(model.selectAllOnFocus)
         model.editView = editTextValue
-
         setEditTextFocusEnabled(editTextValue, itemView)
-
-        editTextValue.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                textViewTitle.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorFormMasterElementFocusedTitle))
-            } else {
-                textViewTitle.setTextColor(ContextCompat.getColor(context,
-                        R.color.colorFormMasterElementTextTitle))
+        editTextValue.apply {
+            val size = getParamTypeInt(model.valueTextSize, formBuilder.commonValueTextSize)
+            if (size > -1) {
+                setTextSizeExt(size)
+            }
+            setTextBoldExt(getParamTypeBoolean(model.valueBold, formBuilder.commonValueBold))
+            val color = getParamTypeInt(model.valueColor, formBuilder.commonValueColor)
+            if (color > -1) {
+                setTextColorExt(color)
             }
         }
-
+        if (model.valueMaxLength > 0) {
+            editTextValue.filters = arrayOf(InputFilter.LengthFilter(model.valueMaxLength))
+        }
         // Password
         editTextValue.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
 
@@ -74,6 +89,28 @@ class FormPasswordEditTextViewBinder(private val context: Context, private val f
 
             override fun afterTextChanged(editable: Editable) {}
         })
+
+        val tb = finder.find(R.id.hide_password) as ToggleButton
+        if (model.showHidePasswordBtn) {
+//            if(model.defaultHidePassword){
+//                editTextValue.transformationMethod = HideReturnsTransformationMethod.getInstance()
+//            } else {
+//                editTextValue.transformationMethod = PasswordTransformationMethod.getInstance()
+//            }
+            tb.visibility = View.VISIBLE
+            model.hidePasswordBtnRes?.let {
+                tb.background = ContextCompat.getDrawable(context, it)
+            }
+            tb.setOnCheckedChangeListener { buttonView, isChecked ->
+                if (isChecked) {
+                    editTextValue.transformationMethod = HideReturnsTransformationMethod.getInstance()
+                } else {
+                    editTextValue.transformationMethod = PasswordTransformationMethod.getInstance()
+                }
+            }
+        } else {
+            tb.visibility = View.GONE
+        }
     }, object : ViewStateProvider<FormPasswordEditTextElement, ViewHolder> {
         override fun createViewStateID(model: FormPasswordEditTextElement): Int {
             return model.id

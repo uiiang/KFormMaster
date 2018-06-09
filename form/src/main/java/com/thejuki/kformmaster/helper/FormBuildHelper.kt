@@ -5,6 +5,7 @@ import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.TypedValue
 import android.view.View
 import com.github.vivchar.rendererrecyclerviewadapter.RendererRecyclerViewAdapter
 import com.github.vivchar.rendererrecyclerviewadapter.binder.ViewBinder
@@ -23,7 +24,40 @@ import java.util.*
  */
 @FormDsl
 class FormBuildHelper
-@JvmOverloads constructor(context: Context, listener: OnFormElementValueChangedListener? = null, recyclerView: RecyclerView? = null, val cacheForm: Boolean = true, autoMeasureEnabled: Boolean = false) {
+@JvmOverloads constructor(context: Context
+                          , listener: OnFormElementValueChangedListener? = null
+                          , recyclerView: RecyclerView? = null
+                          , val cacheForm: Boolean = true
+                          , autoMeasureEnabled: Boolean = false
+                          , val commonPaddingLeft: Int = 0
+                          , val commonPaddingTop: Int = 0
+                          , val commonPaddingRight: Int = 0
+                          , val commonPaddingBottom: Int = 0
+                          , val commonlayoutMarginLeft: Int = 0
+                          , val commonlayoutMarginTop: Int = 0
+                          , val commonlayoutMarginRight: Int = 0
+                          , val commonlayoutMarginBottom: Int = 0
+                          , val commonValueColor: Int = -1
+                          , val commonValueBold: Boolean? = null
+                          , val commonValueTextSize: Int = -1
+                          , val commonValuePrefixTextColor: Int = -1
+                          , val commonValuePrefixTextBold: Boolean? = null
+                          , val commonValuePrefixTextSize: Int = -1
+                          , val commonValueSuffixColor: Int = -1
+                          , val commonValueSuffixBold: Boolean? = null
+                          , val commonValueSuffixSize: Int = -1
+                          , val commonHintColor: Int = -1
+                          , val commonTitleTextSize: Int = -1
+                          , val commonTitlesColor: Int = -1
+                          , val commonTitleFocusColor: Int = -1
+                          , val commonRequiredShowAsterisk: Int = -1
+                          , val commonTitleBold: Boolean? = null
+                          , val commonDividerPaddingLeft: Int = 0
+                          , val commonDividerPaddingRight: Int = 0
+                          , val commonDividerHeight: Int = 1
+                          , val commonDividerColor: Int = -1
+                          , val commonLayoutBackground: Int = -1
+) {
 
     init {
         initializeFormBuildHelper(context, listener)
@@ -137,6 +171,7 @@ class FormBuildHelper
         this.formAdapter.registerRenderer(FormPickerDateTimeViewBinder(context, this).viewBinder)
         this.formAdapter.registerRenderer(FormPickerMultiCheckBoxViewBinder(context, this).viewBinder)
         this.formAdapter.registerRenderer(FormPickerDropDownViewBinder(context, this).viewBinder)
+        this.formAdapter.registerRenderer(FormPickerTagViewBinder(context, this).viewBinder)
     }
 
     /**
@@ -224,5 +259,10 @@ class FormBuildHelper
      */
     fun onValueChanged(element: BaseFormElement<*>) {
         listener?.onValueChanged(element)
+    }
+
+    fun dp2px(context: Context, dpVal: Int): Int {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal.toFloat(), context.resources.displayMetrics).toInt()
     }
 }

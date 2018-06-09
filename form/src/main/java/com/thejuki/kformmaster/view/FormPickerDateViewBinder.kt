@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.support.v7.widget.AppCompatEditText
 import android.support.v7.widget.AppCompatTextView
+import android.text.InputFilter
 import android.text.InputType
 import android.view.View
 import com.github.vivchar.rendererrecyclerviewadapter.ViewHolder
@@ -14,6 +15,10 @@ import com.thejuki.kformmaster.R
 import com.thejuki.kformmaster.helper.FormBuildHelper
 import com.thejuki.kformmaster.model.FormPickerDateElement
 import com.thejuki.kformmaster.state.FormEditTextViewState
+import com.thejuki.kformmaster.utils.setHintTextColorExt
+import com.thejuki.kformmaster.utils.setTextBoldExt
+import com.thejuki.kformmaster.utils.setTextColorExt
+import com.thejuki.kformmaster.utils.setTextSizeExt
 
 /**
  * Form Picker Date ViewBinder
@@ -25,15 +30,19 @@ import com.thejuki.kformmaster.state.FormEditTextViewState
  */
 class FormPickerDateViewBinder(private val context: Context, private val formBuilder: FormBuildHelper) : BaseFormViewBinder() {
     var viewBinder = ViewBinder(R.layout.form_element, FormPickerDateElement::class.java, { model, finder, _ ->
-        val textViewTitle = finder.find(R.id.formElementTitle) as AppCompatTextView
-        val textViewError = finder.find(R.id.formElementError) as AppCompatTextView
-        val itemView = finder.getRootView() as View
-        baseSetup(model, textViewTitle, textViewError, itemView)
+        buildLayout(model, finder, context, formBuilder)
+        val (textViewTitle, textViewError, itemView) = buildTitle(model, finder, context, formBuilder)
+        buildValueWrap(model, finder, formBuilder)
 
         val editTextValue = finder.find(R.id.formElementValue) as AppCompatEditText
 
         editTextValue.setText(model.valueAsString)
         editTextValue.hint = model.hint ?: ""
+        val hintColor = getParamTypeInt(model.hintColor, formBuilder.commonHintColor)
+        if (hintColor > -1) {
+            editTextValue.setHintTextColorExt(hintColor)
+        }
+        editTextValue.setSelectAllOnFocus(model.selectAllOnFocus)
 
         editTextValue.setRawInputType(InputType.TYPE_NULL)
 
@@ -47,9 +56,22 @@ class FormPickerDateViewBinder(private val context: Context, private val formBui
             }
             this?.validOrCurrentDate()
         }
-
+        editTextValue.apply {
+            val size = getParamTypeInt(model.valueTextSize, formBuilder.commonValueTextSize)
+            if (size > -1) {
+                setTextSizeExt(size)
+            }
+            setTextBoldExt(getParamTypeBoolean(model.valueBold, formBuilder.commonValueBold))
+            val color = getParamTypeInt(model.valueColor, formBuilder.commonValueColor)
+            if (color > -1) {
+                setTextColorExt(color)
+            }
+        }
+        if (model.valueMaxLength > 0) {
+            editTextValue.filters = arrayOf(InputFilter.LengthFilter(model.valueMaxLength))
+        }
         val datePickerDialog = DatePickerDialog(context,
-                dateDialogListener(model, editTextValue),
+                dateDialogListener(model, editTextValue, textViewError),
                 model.value?.year ?: 0,
                 if ((model.value?.month ?: 0) == 0) 0 else (model.value?.month ?: 0) - 1,
                 model.value?.dayOfMonth ?: 0)
@@ -66,7 +88,8 @@ class FormPickerDateViewBinder(private val context: Context, private val formBui
     })
 
     private fun dateDialogListener(model: FormPickerDateElement,
-                                   editTextValue: AppCompatEditText): DatePickerDialog.OnDateSetListener {
+                                   editTextValue: AppCompatEditText,
+                                   textViewError: AppCompatTextView): DatePickerDialog.OnDateSetListener {
         return DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             // get current form element, existing value and new value
             var dateChanged = false
@@ -79,8 +102,7 @@ class FormPickerDateViewBinder(private val context: Context, private val formBui
                 this?.isEmptyDate = false
             }
 
-            if (dateChanged)
-            {
+            if (dateChanged) {
                 model.error = null
                 formBuilder.onValueChanged(model)
                 model.valueObservers.forEach { it(model.value, model) }
